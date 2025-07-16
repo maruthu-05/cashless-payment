@@ -6,9 +6,8 @@ import { useEffect, useState } from "react";
 export default function QRPage() {
   const [qrValue, setQrValue] = useState("");
 
-  useEffect(() => {
-    setQrValue("https://cashless-payment-q6msv171a-maruthavanan-s-vs-projects.vercel.app/payment/upi");
-  }, []);
+setQrValue("https://cashless-payment-q6msv171a-maruthavanan-s-vs-projects.vercel.app/payment/upi");
+  
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-6 gap-6">
