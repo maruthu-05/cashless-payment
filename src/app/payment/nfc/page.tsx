@@ -40,7 +40,7 @@ export default function QRPayment() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center gap-6 p-4">
       <Script src="https://checkout.razorpay.com/v1/checkout.js" />
-      <h1 className="text-2xl font-bold">Pay via QR (Test)</h1>
+      <h1 className="text-2xl font-bold">Pay via NFC(Test)</h1>
 
       <input
         type="number"
