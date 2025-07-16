@@ -15,10 +15,11 @@ export default function QRPage() {
       <h1 className="text-2xl font-bold">Scan to Pay via UPI</h1>
 
       {qrValue && (
-        <QRCodeSVG value="https://cashless-payment.vercel.app/payment/upi" size={200} />
+        <QRCodeSVG value={qrValue} size={200} />
       )}
 
       <p className="text-sm text-gray-500">Scan this QR to open UPI Payment page</p>
     </div>
   );
 }
+
