@@ -12,12 +12,14 @@ export default function NFCPayment() {
   const router = useRouter();
 
   useEffect(() => {
-    const storedAmount = sessionStorage.getItem("paymentAmount");
-    if (!storedAmount) {
-      router.push("/");
-      return;
+    if (typeof window !== 'undefined') {
+      const storedAmount = sessionStorage.getItem("paymentAmount");
+      if (!storedAmount) {
+        router.push("/");
+        return;
+      }
+      setAmount(storedAmount);
     }
-    setAmount(storedAmount);
   }, [router]);
 
   const startNFCDetection = () => {

@@ -8,28 +8,35 @@ import { Button } from "@/components/ui/button";
 export default function QRPage() {
   const [qrValue, setQrValue] = useState("");
   const [amount, setAmount] = useState("");
+  const [isClient, setIsClient] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isClient) return;
+    
     const storedAmount = sessionStorage.getItem("paymentAmount");
     if (!storedAmount) {
       router.push("/");
       return;
     }
     setAmount(storedAmount);
-  }, [router]);
+    
+    // Create QR code that includes the amount in the URL
+    const baseUrl = window.location.origin;
+    const qrUrl = `${baseUrl}/payment/qr/pay?amount=${storedAmount}`;
+    setQrValue(qrUrl);
+  }, [isClient, router]);
 
-  useEffect(() => {
-    if (amount && typeof window !== 'undefined') {
-      // Create QR code that includes the amount in the URL
-      const baseUrl = window.location.origin;
-      const qrUrl = `${baseUrl}/payment/qr/pay?amount=${amount}`;
-      setQrValue(qrUrl);
-    }
-  }, [amount]);
-
-  if (!amount) {
-    return <div>Loading...</div>;
+  if (!isClient || !amount) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center p-6">
+        <div>Loading...</div>
+      </div>
+    );
   }
 
   return (
