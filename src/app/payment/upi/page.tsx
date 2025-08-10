@@ -7,16 +7,28 @@ import { Button } from "@/components/ui/button";
 
 export default function UPIPayment() {
   const [amount, setAmount] = useState("");
+  const [isFromQR, setIsFromQR] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const storedAmount = sessionStorage.getItem("paymentAmount");
-      if (!storedAmount) {
-        router.push("/");
-        return;
+      // Check if amount is passed via URL (from QR scan)
+      const urlParams = new URLSearchParams(window.location.search);
+      const amountFromURL = urlParams.get('amount');
+      
+      if (amountFromURL) {
+        setAmount(amountFromURL);
+        setIsFromQR(true);
+      } else {
+        // Check sessionStorage for normal flow
+        const storedAmount = sessionStorage.getItem("paymentAmount");
+        if (!storedAmount) {
+          router.push("/");
+          return;
+        }
+        setAmount(storedAmount);
+        setIsFromQR(false);
       }
-      setAmount(storedAmount);
     }
   }, [router]);
 
@@ -77,11 +89,11 @@ export default function UPIPayment() {
       </Button>
       
       <Button 
-        onClick={() => router.push("/payment")}
+        onClick={() => router.push(isFromQR ? "/" : "/payment")}
         variant="outline"
         className="mt-4"
       >
-        Back to Payment Methods
+        {isFromQR ? "Back to Home" : "Back to Payment Methods"}
       </Button>
     </div>
   );

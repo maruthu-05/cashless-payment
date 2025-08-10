@@ -25,9 +25,9 @@ export default function QRPage() {
     }
     setAmount(storedAmount);
     
-    // Create QR code that includes the amount in the URL
+    // Create QR code that directly links to UPI page with amount parameter
     const baseUrl = window.location.origin;
-    const qrUrl = `${baseUrl}/payment/qr/pay?amount=${storedAmount}`;
+    const qrUrl = `${baseUrl}/payment/upi?amount=${storedAmount}`;
     setQrValue(qrUrl);
   }, [isClient, router]);
 
