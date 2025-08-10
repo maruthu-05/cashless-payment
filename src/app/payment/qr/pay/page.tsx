@@ -1,22 +1,23 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Script from "next/script";
 import { Button } from "@/components/ui/button";
 
-export default function UPIPayment() {
+export default function QRPaymentPage() {
   const [amount, setAmount] = useState("");
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   useEffect(() => {
-    const storedAmount = sessionStorage.getItem("paymentAmount");
-    if (!storedAmount) {
+    const amountFromQR = searchParams.get("amount");
+    if (amountFromQR) {
+      setAmount(amountFromQR);
+    } else {
       router.push("/");
-      return;
     }
-    setAmount(storedAmount);
-  }, [router]);
+  }, [searchParams, router]);
 
   const handlePayment = async () => {
     const amountInPaise = parseFloat(amount) * 100;
@@ -26,13 +27,10 @@ export default function UPIPayment() {
       amount: amountInPaise,
       currency: "INR",
       name: "CashlessPay",
-      description: "UPI Payment",
+      description: "QR Code Payment",
       image: "/favicon.ico",
       handler: function (response: any) {
         alert("✅ Payment successful\nPayment ID: " + response.razorpay_payment_id);
-        // Clear session storage after successful payment
-        sessionStorage.removeItem("paymentAmount");
-        sessionStorage.removeItem("paymentMethod");
         router.push("/");
       },
       prefill: {
@@ -41,7 +39,7 @@ export default function UPIPayment() {
         contact: "9999999999",
       },
       notes: {
-        method: "upi",
+        method: "qr",
       },
       theme: {
         color: "#000000",
@@ -60,7 +58,7 @@ export default function UPIPayment() {
     <div className="min-h-screen flex flex-col items-center justify-center gap-6 p-4">
       <Script src="https://checkout.razorpay.com/v1/checkout.js" />
       
-      <h1 className="text-2xl font-bold">Pay via UPI</h1>
+      <h1 className="text-2xl font-bold">Complete QR Payment</h1>
       
       <div className="text-center mb-4">
         <p className="text-lg text-gray-600">Amount to pay:</p>
@@ -74,13 +72,9 @@ export default function UPIPayment() {
         Pay with Razorpay
       </Button>
       
-      <Button 
-        onClick={() => router.push("/payment")}
-        variant="outline"
-        className="mt-4"
-      >
-        Back to Payment Methods
-      </Button>
+      <p className="text-sm text-gray-500 text-center">
+        You scanned the QR code successfully!
+      </p>
     </div>
   );
 }
